@@ -1,0 +1,16 @@
+{
+    "contents" : "# Exports from estimability package\n\nexport(nonest.basis)\nexport(is.estble)\nexport(all.estble)\n\nexport(epredict) # my own generic\n\nS3method(epredict, lm)\nS3method(epredict, mlm)\nS3method(epredict, glm)\n",
+    "created" : 1422389446902.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "515030916",
+    "id" : "38FF586A",
+    "lastKnownWriteTime" : 1422564588,
+    "path" : "H:/progs/R/devel/ESTIMABILITY/estimability/NAMESPACE",
+    "project_path" : "NAMESPACE",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_namespace"
+}
