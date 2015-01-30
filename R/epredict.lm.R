@@ -13,22 +13,19 @@
 
 
 # Main workhorse -- call with stats-library predict function
-.patch.predict = function(object, newdata, 
+.patch.predict = function(object, newdata, type,
         nonest.tol = 1e-8, nbasis = object$nonest, ...) {
     
     if(missing(newdata)) 
-        predict(object = object, ...)
+        predict(object = object, type = type, ...)
     
     else {
-        if (all(!is.na(object$coefficients)))
-            return (predict(object = object, newdata = newdata, ...))
-        
-        w.handler <- function(w){ # suppress the incorrect warning
-            if (!is.na(pmatch("prediction from a rank-deficient", w$message)))
-                invokeRestart("muffleWarning")
-        }
-        result = withCallingHandlers(predict(object = object, newdata = newdata, ...),
-            warning = w.handler)
+        type = match.arg(type, c("response","link", "terms","x","estimability"))
+        if (all(!is.na(object$coefficients)) && (type != "x"))
+            if (type == "estimability")
+                return (rep(TRUE, nrow(newdata)))
+            else
+                return (predict(object = object, newdata = newdata, type = type, ...))
         
         if(is.null(nbasis)) {
             if (!is.null(qr <- object$qr))
@@ -40,6 +37,23 @@
         m = model.frame(trms, newdata, na.action = na.pass, xlev = object$xlevels)
         X = model.matrix(trms, m, contrasts.arg = object$contrasts)
         nonest = !is.estble(X, nbasis, nonest.tol)
+        
+        if (type == "estimability")
+            return (!nonest)
+        else if (type == "x") {
+            attr(X, "estble") = !nonest
+            return (X)
+        }
+        # (else) we have a type anticipated by stats::predict
+        
+        w.handler <- function(w){ # suppress the incorrect warning
+            if (!is.na(pmatch("prediction from a rank-deficient", w$message)))
+                invokeRestart("muffleWarning")
+        }
+        result = withCallingHandlers(
+            predict(object = object, newdata = newdata, type = type, ...),
+            warning = w.handler)
+        
         if (any(nonest)) {
             if (is.matrix(result))
                 result[nonest, ] = NA
@@ -62,11 +76,17 @@
 epredict = function(object, ...)
     UseMethod("epredict")
 
-epredict.lm = function(object, newdata, ..., nonest.tol = 1e-8, nbasis = object$nonest)
-    .patch.predict(object, newdata, nonest.tol, nbasis, ...)
+epredict.lm = function(object, newdata, ..., 
+        type = c("response","terms","x","estimability"), 
+        nonest.tol = 1e-8, nbasis = object$nonest)
+    .patch.predict(object, newdata, type[1], nonest.tol, nbasis, ...)
 
-epredict.glm = function(object, newdata, ..., nonest.tol = 1e-8, nbasis = object$nonest)
-    .patch.predict(object, newdata, nonest.tol, nbasis, ...)
+epredict.glm = function(object, newdata, ..., 
+        type = c("link", "response","terms","x","estimability"), 
+        nonest.tol = 1e-8, nbasis = object$nonest)
+    .patch.predict(object, newdata, type[1], nonest.tol, nbasis, ...)
 
-epredict.mlm = function(object, newdata, ..., nonest.tol = 1e-8, nbasis = object$nonest)
-    .patch.predict(object, newdata, nonest.tol, nbasis, ...)
+epredict.mlm = function(object, newdata, ..., 
+            type = c("response","x","estimability"), 
+            nonest.tol = 1e-8, nbasis = object$nonest)
+    .patch.predict(object, newdata, type[1], nonest.tol, nbasis, ...)
