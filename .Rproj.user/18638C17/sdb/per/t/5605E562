@@ -1,0 +1,16 @@
+{
+    "contents" : "Package: estimability\nType: Package\nTitle: Estimability Tools for Linear Models\nVersion: 1.0-2\nDate: 2015-01-29\nAuthor: Russell V. Lenth\nMaintainer: Russell V. Lenth <russell-lenth@uiowa.edu>\nDepends: stats\nDescription: Tools for determining estimability of linear functions of regression coefficients, \n  and 'epredict' methods that handle non-estimable cases correctly\nLazyData: Yes\nLicense: GPL-2\n",
+    "created" : 1422379612247.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3327940322",
+    "id" : "5605E562",
+    "lastKnownWriteTime" : 1422566733,
+    "path" : "H:/progs/R/devel/ESTIMABILITY/estimability/DESCRIPTION",
+    "project_path" : "DESCRIPTION",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "dcf"
+}

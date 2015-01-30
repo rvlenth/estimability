@@ -1,0 +1,16 @@
+{
+    "contents" : "# Patch for predict.lm, predict.glm, predict.mlm\n#\n# If newdata present, and fit is rank-deficient, \n# we check estimability and replace any non-est cases with NA\n# Use options(estimability.quiet = TRUE) to suppress message\n# Use options(estimability.suppress = TRUE) to override this patch\n\n# Convenience utility - return \n#    TRUE  if an option is present and TRUE, \n#    FALSE if option is NULL or FALSE\n.falseIfNull = function(option)\n    !is.null(opt <- getOption(option)) && opt\n\n\n# Main workhorse -- call with stats-library predict function\n.patch.predict = function(object, newdata, \n        nonest.tol = 1e-8, nbasis = object$nonest, ...) {\n    \n    if(missing(newdata)) \n        predict(object = object, ...)\n    \n    else {\n        if (all(!is.na(object$coefficients)))\n            return (predict(object = object, newdata = newdata, ...))\n        \n        w.handler <- function(w){ # suppress the incorrect warning\n            if (!is.na(pmatch(\"prediction from a rank-deficient\", w$message)))\n                invokeRestart(\"muffleWarning\")\n        }\n        result = withCallingHandlers(predict(object = object, newdata = newdata, ...),\n            warning = w.handler)\n        \n        if(is.null(nbasis)) {\n            if (!is.null(qr <- object$qr))\n                nbasis = nonest.basis(qr)\n            else\n                nbasis = nonest.basis(model.matrix(object))\n        }\n        trms = delete.response(terms(object))\n        m = model.frame(trms, newdata, na.action = na.pass, xlev = object$xlevels)\n        X = model.matrix(trms, m, contrasts.arg = object$contrasts)\n        nonest = !is.estble(X, nbasis, nonest.tol)\n        if (any(nonest)) {\n            if (is.matrix(result))\n                result[nonest, ] = NA\n            else if (is.list(result)) {\n                result$fit[nonest] = NA\n                result$se.fit[nonest] = NA\n            }\n            else\n                result[nonest] = NA\n            if(!.falseIfNull(\"estimability.quiet\"))\n                message(\"Non-estimable cases are replaced by 'NA'\")\n        }\n        \n        result\n    }\n}\n\n\n# Generic for epredict\nepredict = function(object, ...)\n    UseMethod(\"epredict\")\n\nepredict.lm = function(object, newdata, ..., nonest.tol = 1e-8, nbasis = object$nonest)\n    .patch.predict(object, newdata, nonest.tol, nbasis, ...)\n\nepredict.glm = function(object, newdata, ..., nonest.tol = 1e-8, nbasis = object$nonest)\n    .patch.predict(object, newdata, nonest.tol, nbasis, ...)\n\nepredict.mlm = function(object, newdata, ..., nonest.tol = 1e-8, nbasis = object$nonest)\n    .patch.predict(object, newdata, nonest.tol, nbasis, ...)\n",
+    "created" : 1422564293320.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1201465353",
+    "id" : "D45A6892",
+    "lastKnownWriteTime" : 1422565230,
+    "path" : "H:/progs/R/devel/ESTIMABILITY/estimability/R/epredict.lm.R",
+    "project_path" : "R/epredict.lm.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

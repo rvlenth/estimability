@@ -1,0 +1,11 @@
+# Exports from estimability package
+
+export(nonest.basis)
+export(is.estble)
+export(all.estble)
+
+export(epredict) # my own generic
+
+S3method(epredict, lm)
+S3method(epredict, mlm)
+S3method(epredict, glm)

@@ -1,0 +1,16 @@
+{
+    "contents" : "# Obtain an orthonormal basis for nonestimable functions\n# Call with its QR decomp (LAPACK=FALSE), if available\nnonest.basis = function(qrX) {\n    if (!is.qr(qrX))\n        qrX = qr(qrX, LAPACK=FALSE)\n    rank = qrX$rank\n    tR = t(qr.R(qrX))\n    p = nrow(tR)\n    if (rank == p)\n        return (all.estble)\n    \n    # null space of X is same as null space of R in QR decomp\n    if (ncol(tR) < p) # add columns if not square\n        tR = cbind(tR, matrix(0, nrow=p, ncol=p-ncol(tR)))\n\n    # last few rows are zero -- add a diagonal of 1s\n    extras = rank + seq_len(p - rank)\n    tR[extras, extras] = diag(1, p - rank)\n    \n    # nbasis is last p - rank cols of Q in QR decomp of tR\n    nbasis = qr.Q(qr(tR))[ , extras, drop = FALSE]\n    \n    # permute the rows via pivot\n    nbasis[qrX$pivot, ] = nbasis\n    \n    nbasis\n}\n\n\n# utility to check estimability of x'beta, given nonest.basis\nis.estble = function(x, nbasis, tol = 1e-8) {\n    if (is.matrix(x))\n        return(apply(x, 1, is.estble, nbasis, tol))\n    if(is.na(nbasis[1]))\n        TRUE\n    else {\n        chk = as.numeric(crossprod(nbasis, x))\n        ssqx = sum(x*x) # BEFORE subsetting x\n        # If x really small, don't scale chk'chk\n        if (ssqx < tol) ssqx = 1\n        sum(chk*chk) < tol * ssqx\n    }\n}\n\n\n# nonestimability basis that makes everything estimable\nall.estble = matrix(NA)\n",
+    "created" : 1422373572229.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3568432270",
+    "id" : "49CC7307",
+    "lastKnownWriteTime" : 1422379238,
+    "path" : "H:/progs/R/devel/ESTIMABILITY/estimability/R/estimability.R",
+    "project_path" : "R/estimability.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
