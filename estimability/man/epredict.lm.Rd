@@ -71,7 +71,11 @@ y <- 1 + x1 + x2 + x3 + x4 + c(-.5,.5,.5,-.5,0,.5,-.5,-.5,.5)
 
 # Different orderings of predictors produce different solutions
 mod1234 <- lm(y ~ x1 + x2 + x3 + x4)
-mod4321 <- lm(y ~ x4 + x3 + x2 + x1)
+mod4321 <- eupdate(lm(y ~ x4 + x3 + x2 + x1))
+# (Estimability checking with mod4321 will be more efficient because
+#  it will not need to recreate the basis)
+mod4321$nonest
+
  
 # test data:
 testset <- data.frame( 
@@ -91,14 +95,26 @@ rbind(p1234 = epredict(mod1234, newdata = testset),
 
 # Note that estimable cases have the same predictions
 
-# To prevent re-constructing the basis in future calls:
-mod134 <- eupdate(mod1234, . ~ . - x2)
+# change mod1234 and include nonest basis 
+mod134 <- eupdate(mod1234, . ~ . - x2, subset = -c(3, 7))
 mod134$nonest
 
 # When row spaces are the same, bases are interchangeable
 # so long as you account for the ordering of parameters:
 epredict(mod4321, newdata = testset, type = "estimability",
     nbasis = nonest.basis(mod1234)[c(1,5:2), ])
+    
+\dontrun{
+### Additional illustration
+example(nonest.basis)  ## creates model objects warp.lm1 and warp.lm2
+
+# The two models have different contrast specs. But the empty cell
+# is correctly identified in both:
+fac.cmb <- expand.grid(wool = c("A", "B"), tension = c("L", "M", "H"))
+cbind(fac.cmb, 
+      pred1 = epredict(warp.lm1, newdata = fac.cmb), 
+      pred2 = epredict(warp.lm2, newdata = fac.cmb))
+} % end of \dontrun   
 
 }
 
