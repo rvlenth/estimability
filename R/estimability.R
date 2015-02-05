@@ -1,10 +1,14 @@
 # Obtain an orthonormal basis for nonestimable functions
-# Call with its QR decomp (LAPACK=FALSE), if available
-nonest.basis = function(qrX) {
-    if (!is.qr(qrX))
-        qrX = qr(qrX, LAPACK=FALSE)
-    rank = qrX$rank
-    tR = t(qr.R(qrX))
+
+# Generic
+nonest.basis = function(x, ...)
+    UseMethod("nonest.basis")
+
+
+# Main method -- for class "qr"
+nonest.basis.qr = function(x, ...) {
+    rank = x$rank
+    tR = t(qr.R(x))
     p = nrow(tR)
     if (rank == p)
         return (all.estble)
@@ -21,10 +25,22 @@ nonest.basis = function(qrX) {
     nbasis = qr.Q(qr(tR))[ , extras, drop = FALSE]
     
     # permute the rows via pivot
-    nbasis[qrX$pivot, ] = nbasis
+    nbasis[x$pivot, ] = nbasis
     
     nbasis
 }
+
+
+nonest.basis.matrix = function(x, ...)
+    nonest.basis(qr(x), ...)
+
+
+nonest.basis.lm = function(x, ...) {
+    if (is.null(x$qr))
+        x = update(x, method = "qr", qr = TRUE)
+    nonest.basis(x$qr)
+}
+
 
 
 # utility to check estimability of x'beta, given nonest.basis
