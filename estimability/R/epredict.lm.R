@@ -5,13 +5,6 @@
 # Use options(estimability.quiet = TRUE) to suppress message
 # Use options(estimability.suppress = TRUE) to override this patch
 
-# Convenience utility - return 
-#    TRUE  if an option is present and TRUE, 
-#    FALSE if option is NULL or FALSE
-.falseIfNull = function(option)
-    !is.null(opt <- getOption(option)) && opt
-
-
 # Main workhorse -- call with stats-library predict function
 .patch.predict = function(object, newdata, type,
         nonest.tol = 1e-8, nbasis = object$nonest, ...) {
@@ -63,7 +56,7 @@
             }
             else
                 result[nonest] = NA
-            if(!.falseIfNull("estimability.quiet"))
+            if(getOption("estimability.quiet", FALSE))
                 message("Non-estimable cases are replaced by 'NA'")
         }
         
@@ -77,16 +70,28 @@ epredict = function(object, ...)
     UseMethod("epredict")
 
 epredict.lm = function(object, newdata, ..., 
-        type = c("response","terms","x","estimability"), 
+        type = c("response", "terms", "x", "estimability"), 
         nonest.tol = 1e-8, nbasis = object$nonest)
     .patch.predict(object, newdata, type[1], nonest.tol, nbasis, ...)
 
 epredict.glm = function(object, newdata, ..., 
-        type = c("link", "response","terms","x","estimability"), 
+        type = c("link", "response", "terms", "x", "estimability"), 
         nonest.tol = 1e-8, nbasis = object$nonest)
     .patch.predict(object, newdata, type[1], nonest.tol, nbasis, ...)
 
 epredict.mlm = function(object, newdata, ..., 
-            type = c("response","x","estimability"), 
+            type = c("response", "x", "estimability"), 
             nonest.tol = 1e-8, nbasis = object$nonest)
     .patch.predict(object, newdata, type[1], nonest.tol, nbasis, ...)
+
+
+# Generic for eupdate -- adds nonest basis to object
+eupdate = function(object, ...)
+    UseMethod("eupdate")
+
+eupdate.lm = function(object, ...) {
+    if (length(list(...)) > 0)
+        object = do.call("update", list(object = object, ...))
+    object$nonest = nonest.basis(object)
+    object
+}
