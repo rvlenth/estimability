@@ -7,7 +7,8 @@ Update history for **estimability***
       * Added 'eupdate' generic and 'lm' method for updating a 
         model object and including its nonestimability basis as 
         part of the object
-    Added 'type = "x"' and 'type = "estimability"' options for 'epredict'
+    Added 'type = "matrix"' and 'type = "estimability"' 
+      options for 'epredict'
 
 
 1.0-2

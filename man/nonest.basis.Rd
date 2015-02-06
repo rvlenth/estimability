@@ -3,7 +3,7 @@
 \alias{all.estble}
 \alias{is.estble}
 
-\title{Estimability tools}
+\title{Estimability Tools}
 \description{
 This documents the functions needed to test estimability of linear functions of regression coefficients.
 }

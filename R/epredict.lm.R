@@ -13,8 +13,8 @@
         predict(object = object, type = type, ...)
     
     else {
-        type = match.arg(type, c("response","link", "terms","x","estimability"))
-        if (all(!is.na(object$coefficients)) && (type != "x"))
+        type = match.arg(type, c("response", "link", "terms", "matrix", "estimability"))
+        if (all(!is.na(object$coefficients)) && (type != "matrix"))
             if (type == "estimability")
                 return (rep(TRUE, nrow(newdata)))
             else
@@ -33,7 +33,7 @@
         
         if (type == "estimability")
             return (!nonest)
-        else if (type == "x") {
+        else if (type == "matrix") {
             attr(X, "estble") = !nonest
             return (X)
         }
@@ -70,17 +70,17 @@ epredict = function(object, ...)
     UseMethod("epredict")
 
 epredict.lm = function(object, newdata, ..., 
-        type = c("response", "terms", "x", "estimability"), 
+        type = c("response", "terms", "matrix", "estimability"), 
         nonest.tol = 1e-8, nbasis = object$nonest)
     .patch.predict(object, newdata, type[1], nonest.tol, nbasis, ...)
 
 epredict.glm = function(object, newdata, ..., 
-        type = c("link", "response", "terms", "x", "estimability"), 
+        type = c("link", "response", "terms", "matrix", "estimability"), 
         nonest.tol = 1e-8, nbasis = object$nonest)
     .patch.predict(object, newdata, type[1], nonest.tol, nbasis, ...)
 
 epredict.mlm = function(object, newdata, ..., 
-            type = c("response", "x", "estimability"), 
+            type = c("response", "matrix", "estimability"), 
             nonest.tol = 1e-8, nbasis = object$nonest)
     .patch.predict(object, newdata, type[1], nonest.tol, nbasis, ...)
 
