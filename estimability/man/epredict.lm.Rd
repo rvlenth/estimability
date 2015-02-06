@@ -7,20 +7,20 @@
 \alias{eupdate.lm}
 
 \title{
-Predictions with estimability checking
+Estimability Enhancements for \code{lm} and Relatives
 }
 \description{
 These functions call the corresponding S3 \code{predict} methods in the \pkg{stats} package, but with a check for estimability of new predictions, and with appropriate actions for non-estimable cases.
 }
 \usage{
 \S3method{epredict}{lm}(object, newdata, ..., 
-    type = c("response", "terms", "x", "estimability"), 
+    type = c("response", "terms", "matrix", "estimability"), 
     nonest.tol = 1e-8, nbasis = object$nonest)
 \S3method{epredict}{glm}(object, newdata, ..., 
-    type = c("link", "response", "terms", "x", "estimability"), 
+    type = c("link", "response", "terms", "matrix", "estimability"), 
     nonest.tol = 1e-8, nbasis = object$nonest)
 \S3method{epredict}{mlm}(object, newdata, ..., 
-    type = c("response", "x", "estimability"), 
+    type = c("response", "matrix", "estimability"), 
     nonest.tol = 1e-8, nbasis = object$nonest)
     
 eupdate(object, ...)    
@@ -36,7 +36,7 @@ eupdate(object, ...)
 \details{
 If \code{newdata} is missing or \code{object} is not rank-deficient, this method passes its arguments directly to the same method in the \pkg{stats} library. In rank-deficient cases with \code{newdata} provided, each row of \code{newdata} is tested for estimability against the null basis provided in \code{nbasis}. Any non-estimable cases found are replaced with \code{NA}s.
 
-The \code{type} argument is passed to \code{\link[stats]{predict}} when it is one of \code{"response"}, \code{"link"}, or \code{"terms"}. With \code{newdata} present and \code{type = "x"}, the model matrix for \code{newdata} is returned, with an attribute \code{"estble"} that is a logical vector of length \samp{nrow(newdata)} indicating whether each row is estimable. With \code{type = "estimability"}, just the logical vector is returned.
+The \code{type} argument is passed to \code{\link[stats]{predict}} when it is one of \code{"response"}, \code{"link"}, or \code{"terms"}. With \code{newdata} present and \code{type = "matrix"}, the model matrix for \code{newdata} is returned, with an attribute \code{"estble"} that is a logical vector of length \samp{nrow(newdata)} indicating whether each row is estimable. With \code{type = "estimability"}, just the logical vector is returned.
 
 If you anticipate making several \code{epredict} calls with new data, it improves efficiency to either obtain the null basis and provide it in the call, or add it to \code{object} with the name \code{"nonest"} (perhaps via a call to \code{eupdate}).
 
@@ -44,7 +44,7 @@ If you anticipate making several \code{epredict} calls with new data, it improve
 }
 
 \value{
-The same as the result of a call to the \code{predict} method in the \pkg{stats} package, except rows or elements corresponding to non-estimable predictor combinations are set to \code{NA}. The value for \code{type} is  \code{"x"} or \code{"estimability"} is explained under details.}
+The same as the result of a call to the \code{predict} method in the \pkg{stats} package, except rows or elements corresponding to non-estimable predictor combinations are set to \code{NA}. The value for \code{type} is  \code{"matrix"} or \code{"estimability"} is explained under details.}
 
 \author{
 Russell V. Lenth <russell-lenth@uiowa.edu>
