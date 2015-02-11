@@ -6,7 +6,7 @@ Date: 2015-02-11
 Author: Russell V. Lenth
 Maintainer: Russell V. Lenth <russell-lenth@uiowa.edu>
 Depends: stats
-Description: Tools for determining estimability of linear functions of regression coefficients, 
-  and 'epredict' methods that handle non-estimable cases correctly
+Description: Provides tools for determining estimability of linear functions of regression coefficients, 
+  and 'epredict' methods that handle non-estimable cases correctly.
 LazyData: Yes
 License: GPL-2
