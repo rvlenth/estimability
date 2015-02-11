@@ -31,7 +31,7 @@ eupdate(object, ...)
   \item{\dots}{Arguments passed to \code{\link{predict}} or \code{\link{update}}}
   \item{nonest.tol}{Tolerance used by \code{\link{is.estble}} to check estimability of new predictions}
   \item{type}{Character string specifying the desired result. See Details.}
-  \item{nbasis}{Basis for the row-null space, e.g., a result of a call to \code{\link{nonest.basis}}. If \code{nbasis} is \code{NULL}, a basis is constructed from \code{object}.}
+  \item{nbasis}{Basis for the null space, e.g., a result of a call to \code{\link{nonest.basis}}. If \code{nbasis} is \code{NULL}, a basis is constructed from \code{object}.}
 }
 \details{
 If \code{newdata} is missing or \code{object} is not rank-deficient, this method passes its arguments directly to the same method in the \pkg{stats} library. In rank-deficient cases with \code{newdata} provided, each row of \code{newdata} is tested for estimability against the null basis provided in \code{nbasis}. Any non-estimable cases found are replaced with \code{NA}s.

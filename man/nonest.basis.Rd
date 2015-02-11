@@ -1,5 +1,8 @@
 \name{nonest.basis}
 \alias{nonest.basis}
+\alias{nonest.basis.qr}
+\alias{nonest.basis.matrix}
+\alias{nonest.basis.lm}
 \alias{all.estble}
 \alias{is.estble}
 
@@ -20,20 +23,20 @@ is.estble(x, nbasis, tol = 1e-8)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{For \code{nonest.basis}, an object of a class in \samp{methods("nonest.basis")}. Or, in \code{is.estble}, a numeric vector or matrix for assessing estimability of \samp{sum(x * beta)}, where \code{beta} is the vector of regression coefficients.}
-  \item{nbasis}{Matrix whose columns span the null-row space of the model matrix. Such a matrix is returned by \code{nonest.basis}.}
-  \item{tol}{Numeric tolerance for assessing nonestimability. For nonzero \eqn{x}, estimability of \eqn{\beta'x} is assessed by whether or not
-  \eqn{||N'x||^2 < \tau ||x'x||^2}, where \eqn{N} and \eqn{\tau} denote \code{nbasis} and \code{tol}, respectively.}
+  \item{nbasis}{Matrix whose columns span the null space of the model matrix. Such a matrix is returned by \code{nonest.basis}.}
+  \item{tol}{Numeric tolerance for assessing nonestimability. For nonzero \eqn{x}, estimability of \eqn{\beta'x} is assessed by whether or not \eqn{||N'x||^2 < \tau ||x'x||^2}, where \eqn{N} and \eqn{\tau} denote \code{nbasis} and \code{tol}, respectively.}
+  \item{\dots}{Additional arguments, currently ignored.}
 }
 
 \details{
-Consider a linear model \eqn{y = X\beta + E}. If \eqn{X} is not of full rank, it is not possible to estimate \eqn{\beta} uniquely. However, \eqn{X\beta} \emph{is} uniquely estimable, and so is \eqn{a'X\beta} for any conformable vector \eqn{a}. Since \eqn{a'X} comprises a linear combination of the rows of \eqn{X}, it follows that we can estimate any linear function where the coefficients lie in the row space of \eqn{X}. Equivalently, we can check to ensure that the coefficients are orthogonal to the null space of \eqn{X'}. 
+Consider a linear model \eqn{y = X\beta + E}. If \eqn{X} is not of full rank, it is not possible to estimate \eqn{\beta} uniquely. However, \eqn{X\beta} \emph{is} uniquely estimable, and so is \eqn{a'X\beta} for any conformable vector \eqn{a}. Since \eqn{a'X} comprises a linear combination of the rows of \eqn{X}, it follows that we can estimate any linear function where the coefficients lie in the row space of \eqn{X}. Equivalently, we can check to ensure that the coefficients are orthogonal to the null space of \eqn{X}. 
 
-The constant \code{all.estble} is simply a 1 x 1 matrix of \code{NA}. This specifies a \sQuote{null} non-estimability basis, and using it as \code{nbasis} will cause everything to test as estimable. 
+The constant \code{all.estble} is simply a 1 x 1 matrix of \code{NA}. This specifies a trivial non-estimability basis, and using it as \code{nbasis} will cause everything to test as estimable. 
 }
 
 
 \value{
-When \eqn{X} is not full-rank, the methods for \code{nonest.basis} return a basis for the null space of \eqn{X'}. The number of rows is equal to the number of regression coefficients (\emph{including} any \code{NA}s); and the number of columns is equal to the rank deficiency of the model matrix. The columns are orthonormal. If the model is full-rank, then \code{nonest.basis} returns \code{all.estble}. The \code{matrix} method uses \eqn{X} itself, the \code{qr} method uses the \eqn{QR} decomposition of \eqn{X}, and the \code{lm} method recovers the required information from the object.
+When \eqn{X} is not full-rank, the methods for \code{nonest.basis} return a basis for the null space of \eqn{X}. The number of rows is equal to the number of regression coefficients (\emph{including} any \code{NA}s); and the number of columns is equal to the rank deficiency of the model matrix. The columns are orthonormal. If the model is full-rank, then \code{nonest.basis} returns \code{all.estble}. The \code{matrix} method uses \eqn{X} itself, the \code{qr} method uses the \eqn{QR} decomposition of \eqn{X}, and the \code{lm} method recovers the required information from the object.
 
 The function \code{is.estble} returns a logical value (or vector, if \code{x} is a matrix) that is \code{TRUE} if the function is estimable and \code{FALSE} if not. 
 }
