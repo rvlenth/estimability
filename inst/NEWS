@@ -1,5 +1,8 @@
 Update history for **estimability***
 
+1.1-1
+    Added imports of non-base packages that are referenced
+
 1.1
     Design improvements to aid in potential scope and usability:
       * Made 'nonest.basis' a generic, with provided methods for 
