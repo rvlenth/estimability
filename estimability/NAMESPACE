@@ -1,3 +1,14 @@
+# Imports from non-base packages
+
+importFrom("stats", 
+           "delete.response", 
+           "model.frame", 
+           "model.matrix",
+           "na.pass", 
+           "predict", 
+           "terms", 
+           "update")
+
 # Exports from estimability package
 
 export(all.estble)
