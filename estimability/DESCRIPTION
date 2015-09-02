@@ -1,8 +1,8 @@
 Package: estimability
 Type: Package
 Title: Estimability Tools for Linear Models
-Version: 1.1
-Date: 2015-02-11
+Version: 1.1-1
+Date: 2015-09-02
 Author: Russell V. Lenth
 Maintainer: Russell V. Lenth <russell-lenth@uiowa.edu>
 Depends: stats
