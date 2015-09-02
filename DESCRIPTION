@@ -1,6 +1,6 @@
 Package: estimability
 Type: Package
-Title: Estimability Tools for Linear Models
+Title: Tools for Assessing Estimability of Linear Predictions
 Version: 1.1-1
 Date: 2015-09-02
 Author: Russell V. Lenth
