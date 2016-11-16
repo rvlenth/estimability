@@ -1,3 +1,5 @@
+%    Copyright (c) 2015-2016 Russell V. Lenth                                #
+
 \name{epredict}
 \alias{epredict}
 \alias{epredict.lm}
