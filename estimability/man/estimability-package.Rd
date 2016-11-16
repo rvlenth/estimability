@@ -1,3 +1,5 @@
+%    Copyright (c) 2015-2016 Russell V. Lenth                                #
+
 \name{estimability-package}
 \alias{estimability-package}
 \alias{estimability}

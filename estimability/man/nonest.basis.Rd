@@ -1,3 +1,5 @@
+%    Copyright (c) 2015-2016 Russell V. Lenth                                #
+
 \name{nonest.basis}
 \alias{nonest.basis}
 \alias{nonest.basis.qr}
