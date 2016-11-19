@@ -2,11 +2,12 @@ Package: estimability
 Type: Package
 Title: Tools for Assessing Estimability of Linear Predictions
 Version: 1.2
-Date: 2016-11-16
-Author: Russell V. Lenth
-Maintainer: Russell V. Lenth <russell-lenth@uiowa.edu>
+Date: 2016-11-18
+Authors@R: c(person("Russell", "Lenth", role = c("aut", "cre", "cph"), 
+    email = "russell-lenth@uiowa.edu"))
 Depends: stats
 Description: Provides tools for determining estimability of linear functions of regression coefficients, 
   and 'epredict' methods that handle non-estimable cases correctly.
-LazyData: Yes
-License: GPL-2 | GPL-3
+LazyData: yes
+ByteCompile: yes
+License: GPL(>=3)
