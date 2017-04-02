@@ -1,8 +1,8 @@
 Package: estimability
 Type: Package
 Title: Tools for Assessing Estimability of Linear Predictions
-Version: 1.2
-Date: 2016-11-18
+Version: 1.2-1
+Date: 2017-04-01
 Authors@R: c(person("Russell", "Lenth", role = c("aut", "cre", "cph"), 
     email = "russell-lenth@uiowa.edu"))
 Depends: stats

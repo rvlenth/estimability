@@ -1,5 +1,8 @@
 Update history for **estimability***
 
+1.2-1
+    Moved codebase to github repository rvlenth/estimability
+
 1.2
     Modified license to make it more compatible with dependents
 
