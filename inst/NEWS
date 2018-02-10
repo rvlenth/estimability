@@ -1,5 +1,8 @@
 Update history for **estimability***
 
+1.3
+    Added 'estble.subspace' function
+
 1.2-1
     Moved codebase to github repository rvlenth/estimability
 

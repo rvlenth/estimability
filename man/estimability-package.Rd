@@ -17,10 +17,26 @@ Package: \tab estimability\cr
 Type: \tab Package\cr
 Details: \tab See DESCRIPTION file\cr
 }
-When a linear model is not of full rank, the regression coefficients are not uniquely estimable. However, the predicted values are unique, as are other linear combinations where the coefficients lie in the row space of the data matrix. Thus, estimability of a linear function of regression coefficients can be determined by testing whether the coefficients lie in this row space -- or equivalently, are orthogonal to the corresponding null space. 
-This package provides functions \code{\link{nonest.basis}} and \code{\link{is.estble}} to facilitate such an estimability test. Package developers may find these useful for incorporating in their \code{predict} methods when new predictor settings are involved.
+When a linear model is not of full rank, the regression coefficients are not 
+uniquely estimable. However, the predicted values are unique, as are other linear 
+combinations where the coefficients lie in the row space of the data matrix. Thus, 
+estimability of a linear function of regression coefficients can be determined by 
+testing whether the coefficients lie in this row space -- or equivalently, are 
+orthogonal to the corresponding null space. 
 
-The package also provides \code{\link{epredict}} methods -- alternatives to the \code{\link{predict}} methods in the \pkg{stats} package for \code{"lm"}, \code{"glm"}, and \code{"mlm"} objects. When the \code{newdata} argument is specified, estimability of each new prediction is checked and any non-estimable cases are replaced by \code{NA}. 
+This package provides functions \code{\link{nonest.basis}} and 
+\code{\link{is.estble}} to facilitate such an estimability test. 
+Package developers may find these useful for incorporating in their 
+\code{predict} methods when new predictor settings are involved.
+
+The function \code{\link{estble.subspace}} is useful for projecting
+a matrix onto an estimable subspace whose rows are all estimable.
+
+The package also provides \code{\link{epredict}} methods -- 
+alternatives to the \code{\link{predict}} methods in the \pkg{stats} 
+package for \code{"lm"}, \code{"glm"}, and \code{"mlm"} objects. 
+When the \code{newdata} argument is specified, estimability of each 
+new prediction is checked and any non-estimable cases are replaced by \code{NA}. 
 }
 \author{
 Russell V. Lenth <russell-lenth@uiowa.edu>

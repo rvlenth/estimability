@@ -16,6 +16,7 @@ export(epredict)
 export(eupdate)
 export(is.estble)
 export(nonest.basis)
+export(estble.subspace)
 
 S3method(epredict, lm)
 S3method(epredict, mlm)

@@ -69,6 +69,7 @@ is.estble = function(x, nbasis, tol = 1e-8) {
     if(is.na(nbasis[1]))
         TRUE
     else {
+        x[is.na(x)] = 0
         chk = as.numeric(crossprod(nbasis, x))
         ssqx = sum(x*x) # BEFORE subsetting x
         # If x really small, don't scale chk'chk
