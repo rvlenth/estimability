@@ -28,10 +28,11 @@ estble.subspace = function(L, nbasis, tol = 1e-8) {
         B = diag(nrow(L))
     else {
         LN = L %*% nbasis
+        LN[abs(LN) <= tol] = 0   # don't be jerked around by small values
         B = t(nonest.basis(t(LN)))
     }
     if (is.na(B[1])) # nothing is estimable
-        result = L[-seq_len(nrow(L)), , drop = FALSE]  # nrow = 0
+        result = matrix(0, nrow = 0, ncol = ncol(L))
     else
         result = B %*% L
     attr(result, "B") = B
