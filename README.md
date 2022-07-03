@@ -1,11 +1,17 @@
+---
+title: "estimability"
+output: html_document
+date: '2022-07-03'
+---
+
 R package **estimability**: Support for determining estimability of linear functions
 ====
 
-[![Build Status](https://travis-ci.org/rvlenth/estimability.svg?branch=master)](https://travis-ci.org/rvlenth/estimability)
-[![cran version](http://www.r-pkg.org/badges/version/estimability)](https://cran.r-project.org/package=estimability)
-[![downloads](http://cranlogs.r-pkg.org/badges/estimability)](http://cranlogs.r-pkg.org/badges/estimability)
-[![total downloads](http://cranlogs.r-pkg.org/badges/grand-total/estimability)](http://cranlogs.r-pkg.org/badges/grand-total/estimability)
-[![Research software impact](http://depsy.org/api/package/cran/estimability/badge.svg)](http://depsy.org/package/r/estimability)
+[![Build Status](https://travis-ci.org/rvlenth/estimability.svg?branch=master)](https://travis-ci.org/rvlenth/estimability/)
+[![cran version](https://www.r-pkg.org/badges/version/estimability)](https://cran.r-project.org/package=estimability)
+[![downloads](https://cranlogs.r-pkg.org/badges/estimability)](https://cranlogs.r-pkg.org/badges/estimability)
+[![total downloads](https://cranlogs.r-pkg.org/badges/grand-total/estimability)](https://cranlogs.r-pkg.org/badges/grand-total/estimability)
+[![Research software impact](http://depsy.org/api/package/cran/estimability/badge.svg)](http://depsy.org/package/r/estimability/)
 
 
 ## Features

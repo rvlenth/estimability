@@ -1,5 +1,10 @@
 Update history for **estimability***
 
+1.4
+    Added support for results of svd(), via 'nonest.basis.svd' function 
+    and 'default' method. The 'matrix' method now uses the SVD instead
+    of the QR decomposition.
+
 1.3
     Added 'estble.subspace' function
 
