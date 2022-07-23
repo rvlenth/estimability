@@ -51,7 +51,7 @@ nonest.basis.qr = function(x, ...) {
 
 
 nonest.basis.matrix = function(x, ...)
-    nonest.basis.svd(svd(x, nu = 0), ...)
+    nonest.basis.svd(svd(x, nu = 0, nv = ncol(x)), ...)
     ##nonest.basis(qr(x), ...)
 
 
@@ -69,6 +69,9 @@ nonest.basis.svd = function(x, tol = 5e-8, ...) {
     if (is.null(x$v) || ncol(x$v) < length(x$d))
         stop("We need 'v' to be complete to obtain the basis\n",
              "Run svd() again and exclude the 'nv' argument")
+    # we need d to be as long as ncol(v)
+    if((deficit <- ncol(x$v) - length(x$d)) > 0)
+        x$d = c(x$d, rep(0, deficit))
     w = which(x$d < x$d[1] * tol)
     if (length(w) == 0)
         return(all.estble)
@@ -80,7 +83,7 @@ nonest.basis.default = function(x, ...) {
     if (!is.null(x$d)) {
         if (!is.null(x$vt) && is.matrix(x$vt))  ## apparently from La.svd
             x$v = t(x$vt)
-        if(is.matrix(x$v) && nrow(x$v) == length(x$d))
+        if(is.matrix(x$v) && ncol(x$v) == length(x$d))
             return(nonest.basis.svd(x, ...))
     }
     stop("Requires an 'svd()' or 'La.svd()' result")
