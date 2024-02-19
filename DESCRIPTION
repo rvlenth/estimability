@@ -1,11 +1,12 @@
 Package: estimability
 Type: Package
 Title: Tools for Assessing Estimability of Linear Predictions
-Version: 1.4.1
-Date: 2022-08-05
+Version: 1.5
+Date: 2024-02-18
 Authors@R: c(person("Russell", "Lenth", role = c("aut", "cre", "cph"), 
     email = "russell-lenth@uiowa.edu"))
-Depends: stats
+Depends: stats, R(>= 4.3.0)
+Suggests: knitr, rmarkdown
 Description: Provides tools for determining estimability of linear functions 
   of regression coefficients, and 'epredict' methods that handle 
   non-estimable cases correctly. Estimability theory is discussed in
@@ -13,3 +14,4 @@ Description: Provides tools for determining estimability of linear functions
   "A Primer on Linear Models", Chapman and Hall (ISBN 978-1-4200-6201-4).
 ByteCompile: yes
 License: GPL(>=3)
+VignetteBuilder: knitr

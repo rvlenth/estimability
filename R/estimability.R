@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2015-2016 Russell V. Lenth                                #
+#    Copyright (c) 2015-2024 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the estimability package for R (*estimability*)    #
 #                                                                            #
@@ -24,8 +24,13 @@ nonest.basis = function(x, ...)
     UseMethod("nonest.basis")
 
 
-# Main method -- for class "qr"
-nonest.basis.qr = function(x, ...) {
+# Legacy code for now-deprecated case of a matrix or qr decomposition
+legacy.nonest.basis = function(x, ...) {
+    if(!is.qr(x)) {
+        if (!is.matrix(x))
+            stop("legacy.nonest.basis requires a matrix or qr object")
+        x = qr(x)
+    }
     rank = x$rank
     tR = t(qr.R(x))
     p = nrow(tR)
@@ -35,7 +40,7 @@ nonest.basis.qr = function(x, ...) {
     # null space of X is same as null space of R in QR decomp
     if (ncol(tR) < p) # add columns if not square
         tR = cbind(tR, matrix(0, nrow=p, ncol=p-ncol(tR)))
-
+    
     # last few rows are zero -- add a diagonal of 1s
     extras = rank + seq_len(p - rank)
     tR[extras, extras] = diag(1, p - rank)
@@ -49,6 +54,16 @@ nonest.basis.qr = function(x, ...) {
     nbasis
 }
 
+
+# Main method -- for class "qr"
+# revised to use the svd of R
+nonest.basis.qr = function(x, ...) {
+    R = qr.R(x)
+    cols = which(seq_along(R[1, ]) > x$rank)
+    tmp = nbasis = svd(R, nu = 0, nv = ncol(R))$v[, cols, drop = FALSE]
+    nbasis[x$pivot, ] = tmp
+    nbasis
+}
 
 nonest.basis.matrix = function(x, ...)
     nonest.basis.svd(svd(x, nu = 0, nv = ncol(x)), ...)

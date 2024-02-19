@@ -1,4 +1,4 @@
-%    Copyright (c) 2015-2016 Russell V. Lenth                                #
+%    Copyright (c) 2015-2024 Russell V. Lenth                                #
 
 \name{epredict}
 \alias{epredict}
@@ -28,7 +28,7 @@ These functions call the corresponding S3 \code{predict} methods in the \pkg{sta
 eupdate(object, ...)    
 }
 \arguments{
-  \item{object}{An object ingeriting from \code{lm}}
+  \item{object}{An object inheriting from \code{lm}}
   \item{newdata}{A \code{data.frame} containing predictor combinations for new predictions}
   \item{\dots}{Arguments passed to \code{\link{predict}} or \code{\link{update}}}
   \item{nonest.tol}{Tolerance used by \code{\link{is.estble}} to check estimability of new predictions}
@@ -53,7 +53,16 @@ Russell V. Lenth <russell-lenth@uiowa.edu>
 }
 
 \note{
-The usual rank-deficiency warning from \code{stats::predict} is suppressed; but when non-estimable cases are found, a message is displayed explaining that these results were replaced by \code{NA}. If you wish that message suppressed, use \samp{options(estimability.quiet = TRUE)}.
+The capabilities of the \code{epredict} function for \code{lm} objects is provided 
+in R 4.3.0 and later
+by \code{\link[stats]{predict.lm}} with \code{rankdeficient = "NA"};
+however, \code{epredict} 
+uses \pkg{estimability}'s own criteria to determine which predictions
+are set to \code{NA}. An advantage of using \code{epredict} is one of
+efficiency: we can compute the null basis once and for all and have it available
+additional predictions, whereas \code{predict.lm} will re-compute it each time.
+If the user wishes to see a message explaining why \code{NA}s were displayed,
+set \samp{options(estimability.verbose = TRUE)}.
 }
 
 
@@ -95,6 +104,9 @@ suppressWarnings( # Disable the warning from stats::predict.lm
 rbind(p1234 = epredict(mod1234, newdata = testset),
       p4321 = epredict(mod4321, newdata = testset))
 
+# now stats::predict has same capability for lm objects
+stats::predict(mod1234, newdata = testset, rankdeficient = "NA")
+
 # Note that estimable cases have the same predictions
 
 # change mod1234 and include nonest basis 
@@ -106,6 +118,9 @@ mod134$nonest
 epredict(mod4321, newdata = testset, type = "estimability",
     nbasis = nonest.basis(mod1234)[c(1,5:2), ])
     
+# Comparison with predict.lm
+stats::predict(mod4321, newdata = testset, rankdeficient = "NA")
+
 \dontrun{
 ### Additional illustration
 example(nonest.basis)  ## creates model objects warp.lm1 and warp.lm2

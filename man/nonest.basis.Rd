@@ -2,6 +2,7 @@
 
 \name{nonest.basis}
 \alias{nonest.basis}
+\alias{legacy.nonest.basis}
 \alias{nonest.basis.qr}
 \alias{nonest.basis.matrix}
 \alias{nonest.basis.lm}
@@ -21,6 +22,8 @@ nonest.basis(x, ...)
 \S3method{nonest.basis}{matrix}(x, ...)
 \S3method{nonest.basis}{lm}(x, ...)
 \S3method{nonest.basis}{svd}(x, tol = 5e-8, ...)
+
+legacy.nonest.basis(x, ...)
 
 all.estble
 
@@ -42,7 +45,14 @@ Consider a linear model \eqn{y = X\beta + E}. If \eqn{X} is not of full rank, it
 The \code{nonest.basis} method for class \code{'svd'} is not really functional as a method because there is no \code{"svd"} class (at least in R <= 4.2.0). But the function \code{nonest.basis.svd} is exported and may be called directly; it works with results of \code{\link{svd}} or \code{\link{La.svd}}. We \emph{require} \code{x$v} to be the complete matrix of right singular values; but we do not need \code{x$u} at all.
 
 The \code{default} method does serve as an \code{svd} method, in that it only works if \code{x} has the required elements of an SVD result, in which case it passes it to \code{nonest.basis.svd}.
-The \code{matrix} method runs \code{nonest.basis.svd(svd(x, nu = 0))}. The \code{lm} method runs the \code{qr} method on \code{x$qr}.
+The \code{matrix} method runs \code{nonest.basis.svd(svd(x, nu = 0))}. The \code{lm} method runs the \code{qr} method on \code{x$qr}. 
+
+The function \code{legacy.nonest.basis} is the original default method in early 
+versions of the \pkg{estimability} package. It may be called with \code{x} being 
+either a matrix or a \code{qr} object, and after obtaining the \code{R} matrix, 
+it uses an additional QR decomposition of \code{t(R)} to obtain the needed basis. 
+(The current \code{nonest.basis} method for \code{qr} objects is instead based on the 
+singular-value decomposition of R, and requires much simpler code.)
 
 The constant \code{all.estble} is simply a 1 x 1 matrix of \code{NA}. This specifies a trivial non-estimability basis, and using it as \code{nbasis} will cause everything to test as estimable. 
 }

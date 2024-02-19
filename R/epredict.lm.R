@@ -63,7 +63,8 @@
                 invokeRestart("muffleWarning")
         }
         result = withCallingHandlers(
-            predict(object = object, newdata = newdata, type = type, ...),
+            suppressWarnings(predict(object = object, newdata = newdata, type = type, 
+                    rankdeficient = "simple", ...)),
             warning = w.handler)
         
         if (any(nonest)) {
@@ -75,8 +76,8 @@
             }
             else
                 result[nonest] = NA
-            if(getOption("estimability.quiet", FALSE))
-                message("Non-estimable cases are replaced by 'NA'")
+            if(getOption("estimability.verbose", FALSE))
+                message("Note: Non-estimable cases were replaced by 'NA'")
         }
         
         result
