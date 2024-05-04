@@ -3,7 +3,7 @@ title: "How to add estimability checking to your model's `predict` method"
 author: "estimability package, Version `r packageVersion('estimability')`"
 output: html_vignette
 vignette: >
-  %\VignetteIndexEntry{Adding estimability checking to to your predict method}
+  %\VignetteIndexEntry{How to add estimability checking to your model's `predict` method}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

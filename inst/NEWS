@@ -3,6 +3,9 @@ Update history for **estimability***
 ** NOTE: If you have v1.4 installed, please update to a newer version!
 **       (Or an older one, for that matter)
 
+1.5.1
+    Added pkgdown site
+
 1.5
     We now require R >= 4.3.0.
     Plays along with the changes in 'predict.lm' that came with R 4.3.0.
