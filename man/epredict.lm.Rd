@@ -54,8 +54,7 @@ Russell V. Lenth <russell-lenth@uiowa.edu>
 
 \note{
 The capabilities of the \code{epredict} function for \code{lm} objects is provided 
-in R 4.3.0 and later
-by \code{\link[stats]{predict.lm}} with \code{rankdeficient = "NA"};
+by \code{\link[stats]{predict.lm}} (if using R version 4.3.0 or later) with \code{rankdeficient = "NA"};
 however, \code{epredict} 
 uses \pkg{estimability}'s own criteria to determine which predictions
 are set to \code{NA}. An advantage of using \code{epredict} is one of
@@ -104,8 +103,9 @@ suppressWarnings( # Disable the warning from stats::predict.lm
 rbind(p1234 = epredict(mod1234, newdata = testset),
       p4321 = epredict(mod4321, newdata = testset))
 
-# now stats::predict has same capability for lm objects
-stats::predict(mod1234, newdata = testset, rankdeficient = "NA")
+# stats::predict has same capability for lm objects starting in version 4.3.0:
+if((R.Version()$major >= 4) && (R.Version()$minor >= 3))
+  stats::predict(mod1234, newdata = testset, rankdeficient = "NA")
 
 # Note that estimable cases have the same predictions
 
@@ -118,8 +118,9 @@ mod134$nonest
 epredict(mod4321, newdata = testset, type = "estimability",
     nbasis = nonest.basis(mod1234)[c(1,5:2), ])
     
-# Comparison with predict.lm
-stats::predict(mod4321, newdata = testset, rankdeficient = "NA")
+# Comparison with predict.lm in R >= 4.3.0
+if((R.Version()$major >= 4) && (R.Version()$minor >= 3))
+  stats::predict(mod4321, newdata = testset, rankdeficient = "NA")
 
 \dontrun{
 ### Additional illustration

@@ -5,6 +5,8 @@ Update history for **estimability***
 
 1.5.1
     Added pkgdown site
+    We rolled back the required version of R to 4.1.0, same as 'emmeans' package,
+    so as to not require >=4.3.0 in packages that depend on this one.
 
 1.5
     We now require R >= 4.3.0.
