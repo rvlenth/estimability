@@ -1,7 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^.github$
 ^\.gitignore$
 ^\.travis\.yml$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^\.positai$
+^\.claude$

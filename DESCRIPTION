@@ -1,10 +1,12 @@
 Package: estimability
 Type: Package
 Title: Tools for Assessing Estimability of Linear Predictions
-Version: 1.5.1
-Date: 2024-05-12
-Authors@R: c(person("Russell", "Lenth", role = c("aut", "cre", "cph"), 
-    email = "russell-lenth@uiowa.edu"))
+Version: 2.0.0
+Date: 2026-06-18
+Authors@R: c(person("Russell", "Lenth", role = c("aut", "cph"), 
+        email = "russell-lenth@uiowa.edu"),
+    person("Michael", "Dumelle", role = c("cre", "aut"),
+        email = "Dumelle.Michael@epa.gov"))
 Depends: stats, R(>= 4.1.0)
 Suggests: knitr, rmarkdown
 Description: Provides tools for determining estimability of linear functions 
@@ -17,3 +19,5 @@ BugReports: https://github.com/rvlenth/estimability/issues
 ByteCompile: yes
 License: GPL(>=3)
 VignetteBuilder: knitr
+Encoding: UTF-8
+RoxygenNote: 7.3.3
