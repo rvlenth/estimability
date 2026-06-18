@@ -1,4 +1,15 @@
 url: ~
 template:
   bootstrap: 5
+  math-rendering: mathjax
 
+reference:
+- title: Overview
+  contents:
+  - estimability-package
+  
+- title: Tools
+  contents:
+  - nonest.basis
+  - estble.subspace
+  - epredict
