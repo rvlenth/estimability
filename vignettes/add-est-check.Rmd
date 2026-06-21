@@ -69,3 +69,91 @@ An alternative way to code this would be to exclude the columns of `X` and eleme
 
 The only other thing you need to do is add `estimability` to the `Imports` list
 in your `Description file.
+
+## A complete example
+Below is a complete model-fitting function that illustrates how to navigate the
+various practical aspects of incorporating estimability checking in your code.
+This code emphasises readability rather than computational efficiency, and lacks
+many aspects of robustness or checking of inputs. The function returns
+information about the model terms and factor levels, the computed coefficients
+`coef` and their variance-covariance matrix `vcov`, and the basis `nbasis` of
+the null space of the model matrix. It utilizes the Cholesky decomposition with
+pivoting. Pivoting involves rearranging the order of predictors, managing
+rank-deficient cases by moving some linearly dependent predictors to the end of
+the line. We can the ignore or "discard" those dependent predictors, which in
+estimability parlance is obtaining a solution by constraining the coefficients
+of those predictors to be zero.
+
+Much of what is shown here is how to deal with the `pivot` attribute, which
+comprises the indices of the reordered predictors. The `rank` attribute tells us
+how many nonzero coefficients there are. We compute `coef` using the first
+`rank` pivoted predictors, and by putting `NA`s for the coefficients constrained
+to zero, while `vcov` is only for the non-`NA` elements of `coef`. As is also
+true in the standard `lm` function, the `NA` elements are just used to signal
+which coefficients were constrained to zero. The `nonest.basis()` function sees
+the `pivot` attribute and re-orders the predictors accordingly, so we don't
+un-pivot that result. The last few lines of code are necessary for passing
+needed information to the `predict` method.
+```{r}
+mylm <- function(formula, data) {
+    y <- data[[all.vars(formula)[1]]]
+    X <- model.matrix(formula[-2], data = data)
+    ch <- chol(t(X) %*% X, pivot = TRUE) |> suppressWarnings()
+    rank = attr(ch, "rank")
+    pivot <- attr(ch, "pivot")
+    XpXinv <- chol2inv(ch, size = rank)
+    coef <- rep(NA, ncol(X))
+    names(coef) <- colnames(X)
+    coef[pivot[1:rank]] <- XpXinv %*% (t(X[, pivot[1:rank], drop = FALSE]) %*% y)
+    nonNA <- which(!is.na(coef))
+    fit <- X[ , nonNA, drop = FALSE] %*% coef[nonNA]
+    mse <- sum((y - fit)^2) / (length(y) - rank)
+    ord <- order(pivot[1:rank])
+    vcov <- mse * XpXinv[ord, ord, drop = FALSE]
+    dimnames(vcov) <- list(names(coef)[nonNA], names(coef)[nonNA])
+    nbasis <- estimability::nonest.basis(ch)
+    terms <- terms(formula) |> delete.response()
+    xlev = list()
+    for (v in all.vars(terms))
+        if(!is.null(lv <- levels(data[[v]])))
+            xlev[[v]] <- lv
+    obj <- list(terms = terms, xlev = xlev, coef = coef, vcov = vcov, nbasis = nbasis)
+    class(obj) <- "mylm"
+    obj
+}
+```
+
+The following code is a corresponding S3 method to provide predictions and standard
+errors for new data, with estimability checking. The `model.frame` call ensures
+that we incorporate the original factor coding in the new data. We then
+construct the corresponding model matrix `X` for the new data, and test the
+rows for estimability. Once that is determined, we obtain the matrix `XX`
+with only the estimable rows and corresponding to non-`NA` elements of `coef`.
+The predictions and SEs of any non-estimable rows are set to `NA`.
+
+```{r}
+predict.mylm <- function(mod, newdata) {
+    mf <- model.frame(mod$terms, data = newdata, xlev = mod$xlev)
+    X <- model.matrix(mod$terms, data = mf)
+    pred <- se <- rep(NA, nrow(X))
+    estble <- estimability::is.estble(X, mod$nbasis)
+    XX <- X[estble, !is.na(mod$coef), drop = FALSE]
+    pred[estble] <- XX %*% mod$coef[!is.na(mod$coef)]
+    se[estble] <- sqrt(diag(XX %*% mod$vcov %*% t(XX)))
+    list(pred = pred, se = se)
+}
+```
+
+Finally, here is a test of these functions, using a subset of the `warpbreaks`
+data with two complete cells excluded along with a few more observations. Then
+we obtain predictions for all factor combinations. We find that the two excluded
+cells are non-estimable.
+
+```{r}
+# test code
+warp = warpbreaks[11:40, ]
+warp.mylm = mylm(breaks ~ wool*tension, warp)
+
+new = do.call(expand.grid, warp.mylm$xlev)
+cbind(new, predict(warp.mylm, newdata = new))
+```
