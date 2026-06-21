@@ -133,7 +133,104 @@ non-estimable cases are flagged as <code>NA</code> in the
 estimability.</p>
 <p>The only other thing you need to do is add <code>estimability</code>
 to the <code>Imports</code> list in your `Description file.</p>
-  </main>
+<div class="section level2">
+<h2 id="a-complete-example">A complete example<a class="anchor" aria-label="anchor" href="#a-complete-example"></a>
+</h2>
+<p>Below is a complete model-fitting function that illustrates how to
+navigate the various practical aspects of incorporating estimability
+checking in your code. This code emphasises readability rather than
+computational efficiency, and lacks many aspects of robustness or
+checking of inputs. The function returns information about the model
+terms and factor levels, the computed coefficients <code>coef</code> and
+their variance-covariance matrix <code>vcov</code>, and the basis
+<code>nbasis</code> of the null space of the model matrix. It utilizes
+the Cholesky decomposition with pivoting. Pivoting involves rearranging
+the order of predictors, managing rank-deficient cases by moving some
+linearly dependent predictors to the end of the line. We can the ignore
+or “discard” those dependent predictors, which in estimability parlance
+is obtaining a solution by constraining the coefficients of those
+predictors to be zero.</p>
+<p>Much of what is shown here is how to deal with the <code>pivot</code>
+attribute, which comprises the indices of the reordered predictors. The
+<code>rank</code> attribute tells us how many nonzero coefficients there
+are. We compute <code>coef</code> using the first <code>rank</code>
+pivoted predictors, and by putting <code>NA</code>s for the coefficients
+constrained to zero, while <code>vcov</code> is only for the
+non-<code>NA</code> elements of <code>coef</code>. As is also true in
+the standard <code>lm</code> function, the <code>NA</code> elements are
+just used to signal which coefficients were constrained to zero. The
+<code><a href="../reference/nonest.basis.html">nonest.basis()</a></code> function sees the <code>pivot</code>
+attribute and re-orders the predictors accordingly, so we don’t un-pivot
+that result. The last few lines of code are necessary for passing needed
+information to the <code>predict</code> method.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mylm</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">formula</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">y</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/allnames.html" class="external-link">all.vars</a></span><span class="op">(</span><span class="va">formula</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">]</span></span>
+<span>    <span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="va">formula</span><span class="op">[</span><span class="op">-</span><span class="fl">2</span><span class="op">]</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span></span>
+<span>    <span class="va">ch</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/chol.html" class="external-link">chol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">X</span>, pivot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="va">rank</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">ch</span>, <span class="st">"rank"</span><span class="op">)</span></span>
+<span>    <span class="va">pivot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">ch</span>, <span class="st">"pivot"</span><span class="op">)</span></span>
+<span>    <span class="va">XpXinv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/chol2inv.html" class="external-link">chol2inv</a></span><span class="op">(</span><span class="va">ch</span>, size <span class="op">=</span> <span class="va">rank</span><span class="op">)</span></span>
+<span>    <span class="va">coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">coef</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
+<span>    <span class="va">coef</span><span class="op">[</span><span class="va">pivot</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">rank</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">XpXinv</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span>, <span class="va">pivot</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">rank</span><span class="op">]</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">y</span><span class="op">)</span></span>
+<span>    <span class="va">nonNA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">coef</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="va">X</span><span class="op">[</span> , <span class="va">nonNA</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">coef</span><span class="op">[</span><span class="va">nonNA</span><span class="op">]</span></span>
+<span>    <span class="va">mse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">y</span> <span class="op">-</span> <span class="va">fit</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">-</span> <span class="va">rank</span><span class="op">)</span></span>
+<span>    <span class="va">ord</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">pivot</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">rank</span><span class="op">]</span><span class="op">)</span></span>
+<span>    <span class="va">vcov</span> <span class="op">&lt;-</span> <span class="va">mse</span> <span class="op">*</span> <span class="va">XpXinv</span><span class="op">[</span><span class="va">ord</span>, <span class="va">ord</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">vcov</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">coef</span><span class="op">)</span><span class="op">[</span><span class="va">nonNA</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">coef</span><span class="op">)</span><span class="op">[</span><span class="va">nonNA</span><span class="op">]</span><span class="op">)</span></span>
+<span>    <span class="va">nbasis</span> <span class="op">&lt;-</span> <span class="fu">estimability</span><span class="fu">::</span><span class="fu"><a href="../reference/nonest.basis.html">nonest.basis</a></span><span class="op">(</span><span class="va">ch</span><span class="op">)</span></span>
+<span>    <span class="va">terms</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/terms.html" class="external-link">terms</a></span><span class="op">(</span><span class="va">formula</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/delete.response.html" class="external-link">delete.response</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="va">xlev</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="kw">for</span> <span class="op">(</span><span class="va">v</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/allnames.html" class="external-link">all.vars</a></span><span class="op">(</span><span class="va">terms</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">lv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">data</span><span class="op">[[</span><span class="va">v</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>            <span class="va">xlev</span><span class="op">[[</span><span class="va">v</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">lv</span></span>
+<span>    <span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>terms <span class="op">=</span> <span class="va">terms</span>, xlev <span class="op">=</span> <span class="va">xlev</span>, coef <span class="op">=</span> <span class="va">coef</span>, vcov <span class="op">=</span> <span class="va">vcov</span>, nbasis <span class="op">=</span> <span class="va">nbasis</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"mylm"</span></span>
+<span>    <span class="va">obj</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>The following code is a corresponding S3 method to provide
+predictions and standard errors for new data, with estimability
+checking. The <code>model.frame</code> call ensures that we incorporate
+the original factor coding in the new data. We then construct the
+corresponding model matrix <code>X</code> for the new data, and test the
+rows for estimability. Once that is determined, we obtain the matrix
+<code>XX</code> with only the estimable rows and corresponding to
+non-<code>NA</code> elements of <code>coef</code>. The predictions and
+SEs of any non-estimable rows are set to <code>NA</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">predict.mylm</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">mod</span>, <span class="va">newdata</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">mf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.frame.html" class="external-link">model.frame</a></span><span class="op">(</span><span class="va">mod</span><span class="op">$</span><span class="va">terms</span>, data <span class="op">=</span> <span class="va">newdata</span>, xlev <span class="op">=</span> <span class="va">mod</span><span class="op">$</span><span class="va">xlev</span><span class="op">)</span></span>
+<span>    <span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="va">mod</span><span class="op">$</span><span class="va">terms</span>, data <span class="op">=</span> <span class="va">mf</span><span class="op">)</span></span>
+<span>    <span class="va">pred</span> <span class="op">&lt;-</span> <span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">estble</span> <span class="op">&lt;-</span> <span class="fu">estimability</span><span class="fu">::</span><span class="fu"><a href="../reference/nonest.basis.html">is.estble</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">mod</span><span class="op">$</span><span class="va">nbasis</span><span class="op">)</span></span>
+<span>    <span class="va">XX</span> <span class="op">&lt;-</span> <span class="va">X</span><span class="op">[</span><span class="va">estble</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">mod</span><span class="op">$</span><span class="va">coef</span><span class="op">)</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
+<span>    <span class="va">pred</span><span class="op">[</span><span class="va">estble</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">XX</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">mod</span><span class="op">$</span><span class="va">coef</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">mod</span><span class="op">$</span><span class="va">coef</span><span class="op">)</span><span class="op">]</span></span>
+<span>    <span class="va">se</span><span class="op">[</span><span class="va">estble</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">XX</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">mod</span><span class="op">$</span><span class="va">vcov</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">XX</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pred <span class="op">=</span> <span class="va">pred</span>, se <span class="op">=</span> <span class="va">se</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>Finally, here is a test of these functions, using a subset of the
+<code>warpbreaks</code> data with two complete cells excluded along with
+a few more observations. Then we obtain predictions for all factor
+combinations. We find that the two excluded cells are non-estimable.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># test code</span></span>
+<span><span class="va">warp</span> <span class="op">=</span> <span class="va">warpbreaks</span><span class="op">[</span><span class="fl">11</span><span class="op">:</span><span class="fl">40</span>, <span class="op">]</span></span>
+<span><span class="va">warp.mylm</span> <span class="op">=</span> <span class="fu">mylm</span><span class="op">(</span><span class="va">breaks</span> <span class="op">~</span> <span class="va">wool</span><span class="op">*</span><span class="va">tension</span>, <span class="va">warp</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">new</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">expand.grid</span>, <span class="va">warp.mylm</span><span class="op">$</span><span class="va">xlev</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">new</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">warp.mylm</span>, newdata <span class="op">=</span> <span class="va">new</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre class="ro"><code><span><span class="co">##   wool tension     pred       se</span></span>
+<span><span class="co">## 1    A       L       NA       NA</span></span>
+<span><span class="co">## 2    B       L 28.22222 3.324365</span></span>
+<span><span class="co">## 3    A       M 24.75000 3.526021</span></span>
+<span><span class="co">## 4    B       M 25.75000 4.986547</span></span>
+<span><span class="co">## 5    A       H 24.55556 3.324365</span></span>
+<span><span class="co">## 6    B       H       NA       NA</span></span></code></pre>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
