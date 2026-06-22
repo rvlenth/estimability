@@ -4,7 +4,6 @@ R package **estimability**: Support for determining estimability of linear funct
 [![cran version](https://www.r-pkg.org/badges/version/estimability)](https://cran.r-project.org/package=estimability)
 [![downloads](https://cranlogs.r-pkg.org/badges/estimability)](https://cranlogs.r-pkg.org/badges/estimability)
 [![total downloads](https://cranlogs.r-pkg.org/badges/grand-total/estimability)](https://cranlogs.r-pkg.org/badges/grand-total/estimability)
-[![Research software impact](http://depsy.org/api/package/cran/estimability/badge.svg)](http://depsy.org/package/r/estimability/)
 
 ## Website: 
 https://rvlenth.github.io/estimability/
@@ -33,8 +32,8 @@ install.packages("estimability")
 ```
 Release notes for the latest CRAN version are found at [https://cran.r-project.org/package=estimability/NEWS](https://cran.r-project.org/package=estimability/NEWS) -- or do `news(package = "estimability")` for notes on the version you have installed.
 
-* To install the latest development version from Github, have the newest **devtools** package installed, then run
+* To install the latest development version from GitHub, have the newest **remotes** package installed, then run
 ```
-devtools::install_github("rvlenth/estimability", dependencies = TRUE)
+remotes::install_github("rvlenth/estimability", dependencies = TRUE)
 ```
-For latest release notes on this development version, see the [NEWS file](https://github.com/rvlenth/estimability/blob/master/inst/NEWS)
+For latest release notes on this GitHub version, see the [NEWS file](https://github.com/rvlenth/estimability/blob/master/inst/NEWS)

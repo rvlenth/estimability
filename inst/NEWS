@@ -1,7 +1,12 @@
-Update history for **estimability***
+Update history for **estimability**
 
-** NOTE: If you have v1.4 installed, please update to a newer version!
-**       (Or an older one, for that matter)
+2.0.0
+    Changing maintainer to Mike Dumelle
+    Converted documentation/NAMESPACE to use roxygen2
+    Added (implicit) support for chol(..., pivot = TRUE) results. This is done
+        by checking for "rank" and "pivot" attributes, and using tem if present
+    Added discussion of Cholesky decompositions to documentation
+    Added a complete example to the vignette
 
 1.5.1
     Added pkgdown site
