@@ -1,6 +1,8 @@
-Update history for **estimability**
+---
+title: "NEWS for the estimability package"
+---
 
-## 2.0.0
+## estimability 2.0.0
 
 * Changing maintainer to Michael Dumelle.
 * Converted `documentation/NAMESPACE` to use `roxygen2`.
@@ -9,13 +11,13 @@ Update history for **estimability**
 * Added discussion of Cholesky decompositions to documentation.
 * Added a complete example to the vignette.
 
-## 1.5.1
+## estimability 1.5.1
     
 * Added pkgdown site.
 * We rolled back the required version of R to 4.1.0, same as `emmeans` package,
     so as to not require `>=4.3.0` in packages that depend on this one.
 
-## 1.5
+## estimability 1.5
 
 * We now require R >= 4.3.0, which plays along with the estimability changes in `predict.lm()` that came with R 4.3.0.
 * We re-coded the `nonest.basis.qr` to something much simpler, and the
@@ -24,36 +26,36 @@ Update history for **estimability**
     checking to their package.
     
 
-## 1.4.1
+## estimability 1.4.1
     
 * Correction to version 1.4. The new svd-based methods worked 
     correctly only for n x p matrices with n >= p. Otherwise things
     go badly awry. And this is a big problem because I replaced
     the default `nonest.basis()` method with the svd method.
 
-## 1.4
+## estimability 1.4
 
 * Added support for results of `svd()`, via `nonest.basis.svd` function 
     and `default` method. The `matrix` method now uses the SVD instead
     of the QR decomposition.
 
-## 1.3
+## estimability 1.3
 
 * Added `estble.subspace()` function.
 
-## 1.2-1
+## estimability 1.2.1
 
 * Moved codebase to github repository rvlenth/estimability.
 
-## 1.2
+## estimability 1.2
 
 * Modified license to make it more compatible with dependents.
 
-## 1.1-1
+## estimability 1.1-1
 
 * Added imports of non-base packages that are referenced.
 
-## 1.1
+## estimability 1.1
 
 * Design improvements to aid in potential scope and usability:
     * Made `nonest.basis()` a generic, with provided methods for 
