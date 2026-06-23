@@ -34,11 +34,11 @@
 #' in a linear model, and we need to restrict to the subspace spanned by
 #' the rows of \code{L} that are estimable.
 #' 
-#'   We require \code{B} such that all the rows of \code{M = B \%*\% L}
-#'   are estimable, i.e. orthogonal to the columns of \code{nbasis}.
-#'   Thus, we need \code{B \%*\% L \%*\% nbasis} to be zero, or equivalently,
-#'   \code{t(B)} must be in the null space of \code{t(L \%*\% nbasis)}.
-#'   This can be found using \code{\link{nonest.basis}}.
+#' @details We require \code{B} such that all the rows of \code{M = B \%*\% L}
+#' are estimable, i.e. orthogonal to the columns of \code{nbasis}.
+#' Thus, we need \code{B \%*\% L \%*\% nbasis} to be zero, or equivalently,
+#' \code{t(B)} must be in the null space of \code{t(L \%*\% nbasis)}.
+#' This can be found using \code{\link{nonest.basis}}.
 #'
 #' @param L A matrix of dimensions \emph{k} by \emph{p}
 #' @param nbasis A \emph{k} by \emph{b} matrix whose columns form a

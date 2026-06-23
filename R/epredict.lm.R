@@ -88,7 +88,7 @@
 # Generic for epredict
 #' Estimability Enhancements for \code{lm} and Relatives
 #' 
-#' These functions call the corresponding S3 \code{predict} methods in the 
+#' @details These functions call the corresponding S3 \code{predict} methods in the 
 #' \pkg{stats} package, but with a check for estimability of new predictions, 
 #' and with appropriate actions for non-estimable cases.
 #'

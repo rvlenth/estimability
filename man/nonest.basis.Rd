@@ -90,6 +90,10 @@ vector \eqn{a}. Since \eqn{a'X} comprises a linear combination of the rows of
 \eqn{X}, it follows that we can estimate any linear function where the
 coefficients lie in the row space of \eqn{X}. Equivalently, we can check to
 ensure that the coefficients are orthogonal to the null space of \eqn{X}.
+Because estimability constraints are entirely determined by \eqn{X}, these 
+methods apply to a rich class of models that includes linear models, generalized
+linear models, mixed models, and models with more general correlated-error
+structures (e.g., spatial models, time series models).
 
 The \code{nonest.basis} method for class \code{'svd'} is not really
 functional as a method because there is no \code{"svd"} class (at least in R

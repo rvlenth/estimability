@@ -63,11 +63,13 @@ The same as the result of a call to the \code{predict} method in the
   is explained under details.
 }
 \description{
+Estimability Enhancements for \code{lm} and Relatives
+}
+\details{
 These functions call the corresponding S3 \code{predict} methods in the 
 \pkg{stats} package, but with a check for estimability of new predictions, 
 and with appropriate actions for non-estimable cases.
-}
-\details{
+
 If \code{newdata} is missing or \code{object} is not rank-deficient, this method 
 irectly to the same method in the \pkg{stats} library. In rank-deficient cases with 
 \code{newdata} provided, each row of \code{newdata} is tested for estimability against 
