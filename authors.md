@@ -9,7 +9,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/rvlenth/estimability/blob/master/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/rvlenth/estimability/blob/main/DESCRIPTION)
 
 Lenth R, Dumelle M (2026). *estimability: Tools for Assessing
 Estimability of Linear Predictions*. R package version 2.0.0,
