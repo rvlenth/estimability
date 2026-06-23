@@ -6,6 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Tools for Assessing Estimability of Linear Predictions • estimability</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" sizes="any" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
 <!-- mathjax math --><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script><script>
   window.MathJax = {
     chtml: {
@@ -19,6 +24,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Tools for Assessing Estimability of Linear Predictions">
 <meta name="description" content='Provides tools for determining estimability of linear functions of regression coefficients, and epredict methods that handle non-estimable cases correctly. Estimability theory is discussed in many linear-models textbooks including Chapter 3 of Monahan, JF (2008), "A Primer on Linear Models", Chapman and Hall (ISBN 978-1-4200-6201-4).'>
 <meta property="og:description" content='Provides tools for determining estimability of linear functions of regression coefficients, and epredict methods that handle non-estimable cases correctly. Estimability theory is discussed in many linear-models textbooks including Chapter 3 of Monahan, JF (2008), "A Primer on Linear Models", Chapman and Hall (ISBN 978-1-4200-6201-4).'>
+<meta property="og:image" content="/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -44,6 +50,7 @@
 <li><a class="dropdown-item" href="articles/add-est-check.html">How to add estimability checking to your model's `predict` method</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -58,8 +65,10 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="r-package-estimability-support-for-determining-estimability-of-linear-functions">R package <strong>estimability</strong>: Support for determining estimability of linear functions<a class="anchor" aria-label="anchor" href="#r-package-estimability-support-for-determining-estimability-of-linear-functions"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="r-package-estimability-support-for-determining-estimability-of-linear-functions">R package <strong>estimability</strong>: Support for determining estimability of linear functions<a class="anchor" aria-label="anchor" href="#r-package-estimability-support-for-determining-estimability-of-linear-functions"></a>
+</h1>
+</div>
 <p><a href="https://cran.r-project.org/package=estimability" class="external-link"><img src="https://www.r-pkg.org/badges/version/estimability" alt="cran version"></a> <a href="https://cranlogs.r-pkg.org/badges/estimability" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/estimability" alt="downloads"></a> <a href="https://cranlogs.r-pkg.org/badges/grand-total/estimability" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/estimability" alt="total downloads"></a></p>
 <div class="section level2">
 <h2 id="website">Website:<a class="anchor" aria-label="anchor" href="#website"></a>
@@ -83,13 +92,15 @@ estimable subspace (possibly of smaller dimension). This can be useful in creati
 <ul>
 <li>To install latest version from CRAN, run</li>
 </ul>
-<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"estimability"</span><span class="op">)</span></span></code></pre>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"estimability"</span><span class="op">)</span></span></code></pre></div>
 <p>Release notes for the latest CRAN version are found at <a href="https://cran.r-project.org/package=estimability/NEWS" class="external-link">https://cran.r-project.org/package=estimability/NEWS</a> – or do <code>news(package = "estimability")</code> for notes on the version you have installed.</p>
 <ul>
 <li>To install the latest development version from GitHub, have the newest <strong>remotes</strong> package installed, then run</li>
 </ul>
-<pre><code><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rvlenth/estimability"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
-<p>For latest release notes on this GitHub version, see the <a href="https://github.com/rvlenth/estimability/blob/master/inst/NEWS" class="external-link">NEWS file</a></p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rvlenth/estimability"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>For latest release notes on this GitHub version, see the <a href="https://github.com/rvlenth/estimability/blob/master/NEWS.md" class="external-link">NEWS file</a></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

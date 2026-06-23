@@ -1,8 +1,6 @@
 # Estimability Enhancements for `lm` and Relatives
 
-These functions call the corresponding S3 `predict` methods in the stats
-package, but with a check for estimability of new predictions, and with
-appropriate actions for non-estimable cases.
+Estimability Enhancements for `lm` and Relatives
 
 ## Usage
 
@@ -83,6 +81,10 @@ predictor combinations are set to `NA`. The value for `type` is
 `"matrix"` or `"estimability"` is explained under details.
 
 ## Details
+
+These functions call the corresponding S3 `predict` methods in the stats
+package, but with a check for estimability of new predictions, and with
+appropriate actions for non-estimable cases.
 
 If `newdata` is missing or `object` is not rank-deficient, this method
 irectly to the same method in the stats library. In rank-deficient cases

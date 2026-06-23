@@ -99,7 +99,11 @@ conformable vector \\a\\. Since \\a'X\\ comprises a linear combination
 of the rows of \\X\\, it follows that we can estimate any linear
 function where the coefficients lie in the row space of \\X\\.
 Equivalently, we can check to ensure that the coefficients are
-orthogonal to the null space of \\X\\.
+orthogonal to the null space of \\X\\. Because estimability constraints
+are entirely determined by \\X\\, these methods apply to a rich class of
+models that includes linear models, generalized linear models, mixed
+models, and models with more general correlated-error structures (e.g.,
+spatial models, time series models).
 
 The `nonest.basis` method for class `'svd'` is not really functional as
 a method because there is no `"svd"` class (at least in R \<= 4.2.0).

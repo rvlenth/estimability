@@ -34,9 +34,10 @@ downloads](https://cranlogs.r-pkg.org/badges/grand-total/estimability)](https://
 
 - To install latest version from CRAN, run
 
-&nbsp;
+``` r
 
-    install.packages("estimability")
+install.packages("estimability")
+```
 
 Release notes for the latest CRAN version are found at
 <https://cran.r-project.org/package=estimability/NEWS> – or do
@@ -46,12 +47,13 @@ installed.
 - To install the latest development version from GitHub, have the newest
   **remotes** package installed, then run
 
-&nbsp;
+``` r
 
-    remotes::install_github("rvlenth/estimability", dependencies = TRUE)
+remotes::install_github("rvlenth/estimability", dependencies = TRUE)
+```
 
 For latest release notes on this GitHub version, see the [NEWS
-file](https://github.com/rvlenth/estimability/blob/master/inst/NEWS)
+file](https://github.com/rvlenth/estimability/blob/master/NEWS.md)
 
 # Package index
 
