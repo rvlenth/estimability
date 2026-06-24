@@ -192,19 +192,19 @@ will cause everything to test as estimable.</p>
 <span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">5</span><span class="op">)</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">5</span><span class="op">:</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span> <span class="va">nb</span> <span class="op">&lt;-</span> <span class="fu">nonest.basis</span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            [,1]        [,2]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.3922061  0.90136925</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.7149481  0.24876288</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.1581649 -0.09322948</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.5567832 -0.34199236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.4171348 -0.89010713</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.7077494 -0.26855996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.1606977  0.08879245</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.5470517  0.35735241</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># via the singular-value decomposition</span></span></span>
 <span class="r-in"><span><span class="va">SVD</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/svd.html" class="external-link">svd</a></span><span class="op">(</span><span class="va">X</span>, nu <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>    <span class="co"># we don't need the U part of UDV'</span></span></span>
 <span class="r-in"><span><span class="fu">nonest.basis.svd</span><span class="op">(</span><span class="va">SVD</span><span class="op">)</span>    <span class="co"># same result as above</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            [,1]        [,2]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.3922061  0.90136925</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.7149481  0.24876288</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.1581649 -0.09322948</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.5567832 -0.34199236</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0.4171348 -0.89010713</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.7077494 -0.26855996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.1606977  0.08879245</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  0.5470517  0.35735241</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Via the Cholesky decomposition of X'X</span></span></span>
 <span class="r-in"><span><span class="va">ch</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/chol.html" class="external-link">chol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">X</span>, pivot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="op">)</span></span></span>

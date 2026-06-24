@@ -76,6 +76,11 @@
 <p><a href="https://rvlenth.github.io/estimability/" class="external-link uri">https://rvlenth.github.io/estimability/</a></p>
 </div>
 <div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
+<p>When a model is rank-deficient, predictions from that model may not be unique. The <code>estimability</code> R package provides a set of tools to assess whether predictions from a rank-deficient model are unique (i.e., are estimable). These tools apply to a rich class of models that includes linear models, generalized linear models, mixed models, and models with more general correlated-error structures (e.g., spatial models, time series models). For further details, see <a href="https://journal.r-project.org/articles/RJ-2015-016/" class="external-link">doi:10.32614/RJ-2015-016</a>.</p>
+</div>
+<div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
 </h2>
 <ul>
@@ -100,7 +105,93 @@ estimable subspace (possibly of smaller dimension). This can be useful in creati
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rvlenth/estimability"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>For latest release notes on this GitHub version, see the <a href="https://github.com/rvlenth/estimability/blob/master/NEWS.md" class="external-link">NEWS file</a></p>
+<p>For latest release notes on this GitHub version, see the <a href="https://rvlenth.github.io/estimability/news/index.html" class="external-link">NEWS file</a></p>
+</div>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
+<p>Suppose we have four predictors <code>x1</code>, <code>x2</code>, <code>x3</code>, and <code>x4</code>, and a response variable <code>y</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">4</span><span class="op">:</span><span class="fl">4</span></span>
+<span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">2</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>,<span class="op">-</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">x3</span> <span class="op">&lt;-</span> <span class="fl">3</span> <span class="op">*</span> <span class="va">x1</span> <span class="op">-</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">x2</span></span>
+<span><span class="va">x4</span> <span class="op">&lt;-</span> <span class="va">x2</span> <span class="op">-</span> <span class="va">x1</span> <span class="op">+</span> <span class="fl">4</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">.5</span>, <span class="op">-</span><span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">.5</span>, <span class="op">-</span><span class="fl">.5</span>, <span class="op">-</span><span class="fl">.5</span>, <span class="fl">.5</span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span>, <span class="va">x3</span>, <span class="va">x4</span>, <span class="va">y</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   x1 x2  x3 x4    y</span></span>
+<span><span class="co">#&gt; 1 -4 -2  -8  6 -7.5</span></span>
+<span><span class="co">#&gt; 2 -3  1 -11  8 -3.5</span></span>
+<span><span class="co">#&gt; 3 -2 -1  -4  5 -0.5</span></span>
+<span><span class="co">#&gt; 4 -1  2  -7  7  1.5</span></span>
+<span><span class="co">#&gt; 5  0  0   0  4  5.0</span></span>
+<span><span class="co">#&gt; 6  1  2  -1  5  8.5</span></span></code></pre></div>
+<p>If we fit the following two models, different slope coefficients are estimated as <code>NA</code> depending on the order they are provided to the model formula:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mod1234</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
+<span><span class="va">mod4321</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x1</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/zapsmall.html" class="external-link">zapsmall</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span>    b1234 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod1234</span><span class="op">)</span>,</span>
+<span>    b4321 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mod4321</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       (Intercept) x1 x2 x3 x4</span></span>
+<span><span class="co">#&gt; b1234           5  3  0 NA NA</span></span>
+<span><span class="co">#&gt; b4321         -19 NA NA  3  6</span></span></code></pre></div>
+<p>Now suppose our goal is to make predictions of <code>y</code> for the new observations in <code>testset</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">testset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span> </span>
+<span>    x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,  <span class="fl">6</span>,  <span class="fl">6</span>,  <span class="fl">0</span>,  <span class="fl">0</span>,  <span class="fl">1</span><span class="op">)</span>, </span>
+<span>    x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,  <span class="fl">2</span>,  <span class="fl">2</span>,  <span class="fl">0</span>,  <span class="fl">0</span>,  <span class="fl">2</span><span class="op">)</span>, </span>
+<span>    x3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">7</span>, <span class="fl">14</span>, <span class="fl">14</span>,  <span class="fl">0</span>,  <span class="fl">0</span>,  <span class="fl">3</span><span class="op">)</span>, </span>
+<span>    x4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,  <span class="fl">4</span>,  <span class="fl">0</span>,  <span class="fl">4</span>,  <span class="fl">0</span>,  <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">testset</span></span>
+<span><span class="co">#&gt;   x1 x2 x3 x4</span></span>
+<span><span class="co">#&gt; 1  3  1  7  2</span></span>
+<span><span class="co">#&gt; 2  6  2 14  4</span></span>
+<span><span class="co">#&gt; 3  6  2 14  0</span></span>
+<span><span class="co">#&gt; 4  0  0  0  4</span></span>
+<span><span class="co">#&gt; 5  0  0  0  0</span></span>
+<span><span class="co">#&gt; 6  1  2  3  4</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span></span>
+<span>    <span class="va">testset</span>, </span>
+<span>    pred1234 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mod1234</span>, newdata <span class="op">=</span> <span class="va">testset</span><span class="op">)</span>,</span>
+<span>    pred4321 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mod4321</span>, newdata <span class="op">=</span> <span class="va">testset</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;   x1 x2 x3 x4 pred1234 pred4321</span></span>
+<span><span class="co">#&gt; 1  3  1  7  2       14       14</span></span>
+<span><span class="co">#&gt; 2  6  2 14  4       23       47</span></span>
+<span><span class="co">#&gt; 3  6  2 14  0       23       23</span></span>
+<span><span class="co">#&gt; 4  0  0  0  4        5        5</span></span>
+<span><span class="co">#&gt; 5  0  0  0  0        5      -19</span></span>
+<span><span class="co">#&gt; 6  1  2  3  4        8       14</span></span></code></pre></div>
+<p>Predictions for the first, third, and fourth row are the same for both models, but predictions for the second, fifth, and sixth row are different. This is a problem, as the underlying data provided to the models are the same! Note that R does provide a warning about predictions from the rank-deficient fit (the warning itself is omitted here).</p>
+<p>The <code>estimability</code> package remedies these inconsistencies via <code><a href="reference/epredict.html">epredict()</a></code>, which indicates the rows of <code>testdata</code> that are estimable (with their predictions) or not estimable (with <code>NA</code>):</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rvlenth/estimability" class="external-link">estimability</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span></span>
+<span>    <span class="va">testset</span>, </span>
+<span>    pred1234 <span class="op">=</span> <span class="fu"><a href="reference/epredict.html">epredict</a></span><span class="op">(</span><span class="va">mod1234</span>, newdata <span class="op">=</span> <span class="va">testset</span><span class="op">)</span>,</span>
+<span>    pred4321 <span class="op">=</span> <span class="fu"><a href="reference/epredict.html">epredict</a></span><span class="op">(</span><span class="va">mod4321</span>, newdata <span class="op">=</span> <span class="va">testset</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;   x1 x2 x3 x4 pred1234 pred4321</span></span>
+<span><span class="co">#&gt; 1  3  1  7  2       14       14</span></span>
+<span><span class="co">#&gt; 2  6  2 14  4       NA       NA</span></span>
+<span><span class="co">#&gt; 3  6  2 14  0       23       23</span></span>
+<span><span class="co">#&gt; 4  0  0  0  4        5        5</span></span>
+<span><span class="co">#&gt; 5  0  0  0  0       NA       NA</span></span>
+<span><span class="co">#&gt; 6  1  2  3  4       NA       NA</span></span></code></pre></div>
+<p>Other <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> arguments can be passed to <code><a href="reference/epredict.html">epredict()</a></code>, e.g.,:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/epredict.html">epredict</a></span><span class="op">(</span><span class="va">mod1234</span>, newdata <span class="op">=</span> <span class="va">testset</span>, interval <span class="op">=</span> <span class="st">"prediction"</span>, level <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   fit       lwr       upr</span></span>
+<span><span class="co">#&gt; 1  14 12.715387 15.284613</span></span>
+<span><span class="co">#&gt; 2  NA        NA        NA</span></span>
+<span><span class="co">#&gt; 3  23 21.449058 24.550942</span></span>
+<span><span class="co">#&gt; 4   5  3.817418  6.182582</span></span>
+<span><span class="co">#&gt; 5  NA        NA        NA</span></span>
+<span><span class="co">#&gt; 6  NA        NA        NA</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
