@@ -83,7 +83,7 @@ zapsmall(rbind(
 ```
 
 Now suppose our goal is to make predictions of `y` for the new observations in
-`testdata`:
+`testset`:
 
 ```r
 testset <- data.frame( 
