@@ -1,4 +1,4 @@
-R package **estimability**: Support for determining estimability of linear functions
+R package **estimability**: Support for determining estimability of linear functions <a href="https://rvlenth.github.io/estimability/"><img src="man/figures/logo.png" align="right" height="139" alt="estimability website" /></a>
 ====
 
 [![cran version](https://www.r-pkg.org/badges/version/estimability)](https://cran.r-project.org/package=estimability)
