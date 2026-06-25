@@ -223,7 +223,8 @@ nonest.basis.lm = function(x, ...) {
 # If non-null, rank is used in lieu of tol, and results are permuted using pivot
 #' @rdname nonest.basis
 #' @order 14
-#' @export nonest.basis.svd
+#' @export
+#' @rawNamespace export(nonest.basis.svd)
 nonest.basis.svd = function(x, tol = 5e-8, rank = NULL, pivot = NULL, ...) {
     # Note we don't need the 'u' slot at all.
     if(!is.null(x$vt))   # result of La.svd()
